@@ -12,7 +12,7 @@ app.use("/uploads",express.static("./uploads"))
 const db = mysql.createConnection({
     host:"localhost",
     user:"root",
-    password:"ConeyTang",
+    password:"ConeyTangY",
     database:"test"
 })
 
