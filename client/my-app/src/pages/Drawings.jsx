@@ -1,3 +1,4 @@
+// Import necessary modules and hooks
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -6,28 +7,35 @@ import { Link } from "react-router-dom"
 import Button from "react-bootstrap/Button"
 import Card from "react-bootstrap/Card"
 
+// State variable to store drawings data from the backend
 const Drawings = () => {
     const [drawings, setDrawings] = useState([]);
 
+    // Fetch drawings data from the backend using useEffect hook
     useEffect(()=>{
         const fetchAllDrawings = async () =>{
             try{
+                // Make a GET request to retrieve all drawings data
                 const res = await axios.get("http://localhost:666/drawings");
                 if(res.data.status ===201){
                     setDrawings(res.data.data);
                 }
             }catch(err){
+                // Handle errors if any
                 console.log("Exception at drawing function!")
                 console.log(err);
             }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
         };
+        // Call the fetchAllDrawings function only once when the component mounts
         fetchAllDrawings()
     },[]);
 
-
+    // Event handler to delete a drawing
     const handleDelete = async (id) =>{
         try{
+            // Make a DELETE request to the backend to delete the drawing with the given ID
             await axios.delete("http://localhost:666/drawings/" + id)
+            // Reload the page after successful deletion to update the displayed drawings
             window.location.reload()
         }catch(err){
             console.log(err)
@@ -36,7 +44,7 @@ const Drawings = () => {
 
 
 
-
+    // Render the drawings page
     return (
         <>
         <div> 
