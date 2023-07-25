@@ -1,3 +1,4 @@
+// Import required modules and set up middleware
 import express, { Router } from "express"
 import mysql from "mysql"
 import cors from "cors"
@@ -8,14 +9,15 @@ app.use(cors())
 app.use(express.json())
 app.use("/uploads",express.static("./uploads"))
 
-
+// Create a connection to the MySQL database
 const db = mysql.createConnection({
     host:"localhost",
     user:"root",
-    password:"ConeyTangY",
+    password:"ChengFei@520",
     database:"test"
 })
 
+// Configure multer to handle image uploads
 var imgConfig = multer.diskStorage({
     destination:(req,file,callback)=>{
         callback(null, "/Users/lvshulan/Desktop/DrawingWebsiteYin/client/my-app/public")
@@ -26,7 +28,7 @@ var imgConfig = multer.diskStorage({
 })
 
 
-
+// Filter function to accept only image files
 const imageFilter = (req, file, callback)=>{
     if(file.mimetype.startsWith("image")){
         callback(null,true)
@@ -45,10 +47,12 @@ var upload = multer({
 // If there is authentication problem
 //DO:  ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Tang000';
 
+// Route for the root endpoint
 app.get("/", (req, res)=>{
     res.json("Backend!")
 })
 
+// Route to get all drawings from the database
 app.get("/drawings",(req,res)=>{
     try{     
         const q = "SELECT * FROM drawings"
@@ -66,6 +70,7 @@ app.get("/drawings",(req,res)=>{
     }
 })
 
+// Route to add a new drawing to the database
 app.post("/drawings",upload.single("pic"),(req, res)=>{
     console.log("test")
     const q = "INSERT INTO drawings (`title`, `description`, `pic`) VALUES (?)"
@@ -93,6 +98,7 @@ app.post("/drawings",upload.single("pic"),(req, res)=>{
     }
 })
 
+// Route to delete a drawing from the database
 app.delete("/drawings/:id", (req, res)=>{
     const drawingId = req.params.id;
     const q = "DELETE FROM drawings WHERE id = ?"
@@ -110,6 +116,7 @@ app.delete("/drawings/:id", (req, res)=>{
     }
 })
 
+// Route to update a drawing in the database
 app.put("/drawings/:id",upload.single("pic"),(req, res)=>{
     const drawingId = req.params.id;
     const q = "UPDATE drawings SET `title` = ?, `description` = ?, `pic` = ? WHERE id = ?";
@@ -134,7 +141,7 @@ app.put("/drawings/:id",upload.single("pic"),(req, res)=>{
     });
 })
 
-
+// Start the server on port 666
 app.listen(666, ()=>{
     console.log ("Connect to backend")
 })
